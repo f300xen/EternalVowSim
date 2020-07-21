@@ -3,9 +3,9 @@
 
 <head>
     <title>Vow Simulator</title>
-    <div class="vow"></div>
-    <div class="sigil"></div>
-    <div class="nonPower"></div>
+    <div class="vow card"></div>
+    <div class="sigil card"></div>
+    <div class="nonPower card"></div>
     <style>
         body {
             background-color: black;
@@ -25,27 +25,22 @@
             color: white;
             font-weight: 700;
         }
-        
-        .deck .title{
-            background-color:white;
-            color:black;
-            display:inline-block;
-            width:100%;
-            height:auto;
-            padding:.25rem 0;
-        }
-        
-        .deck .a{
-            display:inline-block;
-            font-size:.75em;
-            margin-right:.125rem;
-        }
-        .deck .b{
-            display:inline-block;
-            font-size:.75em;
-            margin-left:.125rem;
+
+        .deck .title {
+            background-color: white;
+            color: black;
+            display: inline-block;
+            width: 100%;
+            height: auto;
+            padding: .25rem 0;
         }
 
+        .deck .a {
+            text-align:center;
+            display: inline-block;
+            font-size: .75em;
+        }
+        
         .deck.original {}
 
         .deck.vowed {}
@@ -62,7 +57,7 @@
             width: 4rem;
         }
 
-        .deck div {
+        .deck div.card {
             display: block;
             height: .375rem;
             margin-bottom: .125rem;
@@ -150,6 +145,7 @@
         input[type=number] {
             -moz-appearance: textfield;
         }
+
     </style>
 
     <script type="text/javascript">
@@ -251,6 +247,7 @@
                 deck2.children[0].remove();
                 ret = 1;
             }
+            
             hand2.appendChild(deck2.children[0]);
 
             var a = document.querySelector('#drawn');
@@ -261,9 +258,9 @@
             var c = document.querySelector('#npd2');
             c.textContent = hand2.querySelectorAll(".nonPower").length;
 
-            
             return ret;
         }
+
     </script>
 </head>
 
@@ -272,7 +269,9 @@
         <div class="deck original">
             <div class="title">Original Deck</div>
             <br>
-            <div class="a">Drawn</div><div class="b">Remaining</div>
+            <div class="a">Hand 
+                <span style="display:inline-block; width:2rem;"></span>
+                Deck</div>
             <div class="hand">
             </div>
             <div class="remaining">
@@ -280,7 +279,9 @@
         </div>
         <div class="deck vowed">
             <div class="title">Thinned Deck</div>
-            <div class="a">Drawn</div><div class="b">Remaining</div>
+            <div class="a">Hand
+                <span style="display:inline-block; width:2rem;"></span>
+                Deck</div>
             <div class="hand">
             </div>
             <div class="remaining">
@@ -366,4 +367,6 @@
         </div>
     </div>
 
-</body></html>
+</body>
+
+</html>
