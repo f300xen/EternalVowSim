@@ -1,0 +1,372 @@
+<!DOCTYPE html> <!-- is this even a thing anymore -->
+<html>
+
+<head>
+    <title>Vow Simulator</title>
+    <div class="vow"></div>
+    <div class="sigil"></div>
+    <div class="nonPower"></div>
+    <style>
+        body {
+            background-color: black;
+            font-family: arial;
+        }
+
+        .decks {
+            position: absolute;
+            left: calc(50% + .25rem);
+        }
+
+        .deck {
+            display: inline-block;
+            height: auto;
+            width: 8.25rem;
+            text-align: center;
+            color: white;
+            font-weight: 700;
+        }
+        
+        .deck .title{
+            background-color:white;
+            color:black;
+            display:inline-block;
+            width:100%;
+            height:auto;
+            padding:.25rem 0;
+        }
+        
+        .deck .a{
+            display:inline-block;
+            font-size:.75em;
+            margin-right:.125rem;
+        }
+        .deck .b{
+            display:inline-block;
+            font-size:.75em;
+            margin-left:.125rem;
+        }
+
+        .deck.original {}
+
+        .deck.vowed {}
+
+        .deck .hand {
+            display: inline-block;
+            float: left;
+            width: 4rem;
+        }
+
+        .deck .remaining {
+            display: inline-block;
+            float: right;
+            width: 4rem;
+        }
+
+        .deck div {
+            display: block;
+            height: .375rem;
+            margin-bottom: .125rem;
+            width: 4rem;
+        }
+
+        .deck div.vow {
+            background-color: yellowgreen;
+        }
+
+        .deck div.sigil {
+            background-color: orangered;
+        }
+
+        .deck div.nonPower {
+            background-color: cyan;
+        }
+
+        .deck div.removed {
+            background-color: black;
+        }
+
+        .info {
+            display: inline-block;
+            position: absolute;
+            right: calc(50% + .25rem);
+        }
+
+        .info .stat {
+            font-family: arial;
+            font-weight: 700;
+            padding: .125rem;
+        }
+
+        .info .stat .static {
+            background-color: black;
+            color: white;
+            display: inline-block;
+            padding: .5rem;
+            width: 225px;
+            text-align: right;
+        }
+
+        .info .stat .dynamic {
+            background-color: white;
+            display: inline-block;
+            padding: .5rem;
+            width: 25px;
+            text-align: center;
+        }
+
+        .info .stat .dynamic input {
+            background-color: transparent;
+            border: none;
+            width: 100%;
+            margin: -.5rem;
+            padding: .5rem;
+            text-align: center;
+            font-weight: 700;
+            font-size: 1.25rem;
+        }
+
+        .info .clicky {
+            background-color: #39ff14;
+            text-align: center;
+            padding: .5rem;
+            border-radius: .5rem;
+            margin: .25rem 0;
+            cursor: pointer;
+            font-weight: 700;
+        }
+
+        .info .clicky:hover {
+            background-color: #ffff14;
+        }
+
+        /* Chrome, Safari, Edge, Opera */
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        /* Firefox */
+        input[type=number] {
+            -moz-appearance: textfield;
+        }
+    </style>
+
+    <script type="text/javascript">
+        var vows, sigils, nonPower;
+
+        function CreateDeck() {
+            var a = document.querySelector('.vow'); // 12x
+            var b = document.querySelector('.sigil'); // 13x
+            var c = document.querySelector('.nonPower'); // 50x
+
+            var hand1 = document.querySelector('.original .hand');
+            var deck1 = document.querySelector('.original .remaining');
+            var hand2 = document.querySelector('.vowed .hand');
+            var deck2 = document.querySelector('.vowed .remaining');
+
+            var allStats = document.querySelectorAll(".dynamic:not(.color)");
+            allStats.forEach(function(item) {
+                item.textContent = "0";
+            })
+
+            hand1.innerHTML = deck1.innerHTML = hand2.innerHTML = deck2.innerHTML = "";
+
+            var input1 = document.querySelector('#vowAmount');
+            var input2 = document.querySelector('#sigilAmount');
+            var input3 = document.querySelector('#nonPowerAmount');
+
+            vows = input1.value, sigils = input2.value, nonPower = input3.value;
+
+            var clone;
+            for (var i = 0; i < vows; i++) {
+                clone = a.cloneNode();
+                deck1.appendChild(clone);
+            }
+            for (var i = 0; i < sigils; i++) {
+                clone = b.cloneNode();
+                deck1.appendChild(clone);
+            }
+            for (var i = 0; i < nonPower; i++) {
+                clone = c.cloneNode();
+                deck1.appendChild(clone);
+            }
+            for (var i = deck1.children.length; i >= 0; i--) {
+                deck1.appendChild(deck1.children[Math.random() * i | 0]);
+            }
+            for (var i = 0; i < deck1.children.length; i++) {
+                clone = deck1.children[i].cloneNode();
+                deck2.appendChild(clone);
+            }
+            drawn = 0;
+            damage = 0;
+            DrawX(7);
+        }
+
+        var drawn = 0;
+        var damage = 0;
+
+        function PlayVow() {
+            var deck2 = document.querySelector('.vowed .remaining');
+
+            var viableRemove = deck2.querySelectorAll('.sigil:not(.removed)');
+            if (viableRemove.length > 0) {
+                viableRemove[Math.random() * viableRemove.length | 0].classList.add('removed');
+                damage++;
+                var a = document.querySelector('#vow1');
+                var b = document.querySelector('#vow2');
+                a.textContent = b.textContent = damage;
+            } else {}
+
+        }
+
+        function DrawX(amount) {
+            for (var i = 0; i < amount; i++) {
+                DrawOne();
+            }
+        }
+
+        function DrawUntilDiff() {
+            var i = 0;
+            while (DrawOne() != 1) {}
+        }
+
+        function DrawOne() {
+            var ret = 0;
+
+            var hand1 = document.querySelector('.original .hand');
+            var deck1 = document.querySelector('.original .remaining');
+            var hand2 = document.querySelector('.vowed .hand');
+            var deck2 = document.querySelector('.vowed .remaining');
+
+            if (deck2.querySelectorAll("*:not(removed)").length == 0) {
+                return 1;
+            }
+
+            drawn++;
+
+            hand1.appendChild(deck1.children[0]);
+
+            while (deck2.children[0].classList.contains("removed")) {
+                deck2.children[0].remove();
+                ret = 1;
+            }
+            hand2.appendChild(deck2.children[0]);
+            if (deck2.children[0].classList.contains("removed")) {
+                deck2.children[0].remove();
+            }
+
+            var a = document.querySelector('#drawn');
+            a.textContent = drawn;
+
+            var b = document.querySelector('#npd1');
+            b.textContent = hand1.querySelectorAll(".nonPower").length;
+            var c = document.querySelector('#npd2');
+            c.textContent = hand2.querySelectorAll(".nonPower").length;
+
+            
+            return ret;
+        }
+    </script>
+</head>
+
+<body onload="CreateDeck()">
+    <div class="decks">
+        <div class="deck original">
+            <div class="title">Original Deck</div>
+            <br>
+            <div class="a">Drawn</div><div class="b">Remaining</div>
+            <div class="hand">
+            </div>
+            <div class="remaining">
+            </div>
+        </div>
+        <div class="deck vowed">
+            <div class="title">Thinned Deck</div>
+            <div class="a">Drawn</div><div class="b">Remaining</div>
+            <div class="hand">
+            </div>
+            <div class="remaining">
+            </div>
+        </div>
+    </div>
+    <div class="info">
+        <div class="stat">
+            <div class="static">
+                Sigils Removed
+            </div>
+            <div id="vow1" class="dynamic">
+                0
+            </div>
+        </div>
+        <div class="stat">
+            <div class="static">
+                Damage Taken
+            </div>
+            <div id="vow2" class="dynamic">
+                0
+            </div>
+        </div>
+        <div class="stat">
+            <div class="static">
+                Cards Drawn
+            </div>
+            <div id="drawn" class="dynamic">
+                0
+            </div>
+        </div>
+        <div class="stat">
+            <div class="static">
+                Non-Power Drawn (Vows)
+            </div>
+            <div id="npd1" class="dynamic">
+                0
+            </div>
+        </div>
+        <div class="stat">
+            <div class="static">
+                Non-Power Drawn (No Vows)
+            </div>
+            <div id="npd2" class="dynamic">
+                0
+            </div>
+        </div>
+        <div class="clicky" onclick="PlayVow()">
+            Play a Vow
+        </div>
+        <div class="clicky" onclick="DrawOne()">
+            Draw a Card
+        </div>
+        <div class="clicky" onclick="DrawUntilDiff()">
+            Draw Until Difference
+        </div>
+        <div class="clicky" onclick="CreateDeck()">
+            Generate New Deck
+        </div>
+        <div class="stat">
+            <div class="static">
+                Non-Sigil Power Card
+            </div>
+            <div class="dynamic color" style="background-color:yellowgreen;">
+                <input id="vowAmount" value="12" type="number">
+            </div>
+        </div>
+        <div class="stat">
+            <div class="static">
+                Sigil
+            </div>
+            <div class="dynamic color" style="background-color:orangered;">
+                <input id="sigilAmount" value="13" type="number">
+            </div>
+        </div>
+        <div class="stat">
+            <div class="static">
+                Non-Power Card
+            </div>
+            <div class="dynamic color" style="background-color:cyan;">
+                <input id="nonPowerAmount" value="50" type="number">
+            </div>
+        </div>
+    </div>
+
+</body></html>
