@@ -6,20 +6,30 @@
     <div class="vow card"></div>
     <div class="sigil card"></div>
     <div class="nonPower card"></div>
-    
+
     <meta property="og:title" content="Eternal Vow Simulator">
     <meta property="og:image" content="https://cards.eternalwarcry.com/cards/full/Prism_Golem.png">
     <meta property="og:description" content="For those who play Vows in mono-Faction decks.">
-    
+
     <style>
         body {
             background-color: black;
             font-family: arial;
+            text-align: center;
+            margin: 0;
+        }
+
+        .everything {
+            margin-top: .375rem;
+            display: inline-block;
+            font-size: 1.5em;
         }
 
         .decks {
-            position: absolute;
-            left: calc(50% + .25rem);
+            display: block;
+            float: right;
+            margin-left: .25rem;
+            margin-top: .125rem;
         }
 
         .deck {
@@ -41,11 +51,11 @@
         }
 
         .deck .a {
-            text-align:center;
+            text-align: center;
             display: inline-block;
             font-size: .75em;
         }
-        
+
         .deck.original {}
 
         .deck.vowed {}
@@ -86,9 +96,9 @@
         }
 
         .info {
-            display: inline-block;
-            position: absolute;
-            right: calc(50% + .25rem);
+            display: block;
+            float: left;
+            margin-right: .25rem;
         }
 
         .info .stat {
@@ -102,7 +112,6 @@
             color: white;
             display: inline-block;
             padding: .5rem;
-            width: 225px;
             text-align: right;
         }
 
@@ -111,6 +120,7 @@
             display: inline-block;
             padding: .5rem;
             width: 25px;
+            float: right;
             text-align: center;
         }
 
@@ -150,7 +160,6 @@
         input[type=number] {
             -moz-appearance: textfield;
         }
-
     </style>
 
     <script type="text/javascript">
@@ -229,7 +238,7 @@
 
         function DrawUntilDiff() {
             var i = 0;
-            while (DrawOne() != 1) {}
+            while (DrawOne() == 0) {}
         }
 
         function DrawOne() {
@@ -250,9 +259,9 @@
 
             while (deck2.children[0].classList.contains("removed")) {
                 deck2.children[0].remove();
-                ret = 1;
+                ret++;
             }
-            
+
             hand2.appendChild(deck2.children[0]);
 
             var a = document.querySelector('#drawn');
@@ -265,113 +274,115 @@
 
             return ret;
         }
-
     </script>
 </head>
 
 <body onload="CreateDeck()">
-    <div class="decks">
-        <div class="deck original">
-            <div class="title">Original Deck</div>
-            <br>
-            <div class="a">Hand 
-                <span style="display:inline-block; width:2rem;"></span>
-                Deck</div>
-            <div class="hand">
+    <div class="everything">
+        <div class="decks">
+            <div class="deck original">
+                <div class="title">Original Deck</div>
+                <br>
+                <div class="a">
+                    Hand
+                    <span style="display:inline-block; width:1rem;"></span>
+                    Deck
+                </div>
+                <div class="hand">
+                </div>
+                <div class="remaining">
+                </div>
             </div>
-            <div class="remaining">
+            <div class="deck vowed">
+                <div class="title">Thinned Deck</div>
+                <div class="a">
+                    Hand
+                    <span style="display:inline-block; width:1rem;"></span>
+                    Deck
+                </div>
+                <div class="hand">
+                </div>
+                <div class="remaining">
+                </div>
             </div>
         </div>
-        <div class="deck vowed">
-            <div class="title">Thinned Deck</div>
-            <div class="a">Hand
-                <span style="display:inline-block; width:2rem;"></span>
-                Deck</div>
-            <div class="hand">
+        <div class="info">
+            <div class="stat">
+                <div class="static">
+                    Sigils Removed
+                </div>
+                <div id="vow1" class="dynamic">
+                    0
+                </div>
             </div>
-            <div class="remaining">
+            <div class="stat">
+                <div class="static">
+                    Damage Taken
+                </div>
+                <div id="vow2" class="dynamic">
+                    0
+                </div>
+            </div>
+            <div class="stat">
+                <div class="static">
+                    Cards Drawn
+                </div>
+                <div id="drawn" class="dynamic">
+                    0
+                </div>
+            </div>
+            <div class="stat">
+                <div class="static">
+                    Non-Power Drawn (Vows)
+                </div>
+                <div id="npd1" class="dynamic">
+                    0
+                </div>
+            </div>
+            <div class="stat">
+                <div class="static">
+                    Non-Power Drawn (No Vows)
+                </div>
+                <div id="npd2" class="dynamic">
+                    0
+                </div>
+            </div>
+            <div class="clicky" onclick="PlayVow()">
+                Play a Vow
+            </div>
+            <div class="clicky" onclick="DrawOne()">
+                Draw a Card
+            </div>
+            <div class="clicky" onclick="DrawUntilDiff()">
+                Draw Until Difference
+            </div>
+            <div class="clicky" onclick="CreateDeck()">
+                Generate New Deck
+            </div>
+            <div class="stat">
+                <div class="static">
+                    Amount of Non-Sigil Power
+                </div>
+                <div class="dynamic color" style="background-color:yellowgreen;">
+                    <input id="vowAmount" value="12" type="number">
+                </div>
+            </div>
+            <div class="stat">
+                <div class="static">
+                    Amount of Sigils
+                </div>
+                <div class="dynamic color" style="background-color:orangered;">
+                    <input id="sigilAmount" value="13" type="number">
+                </div>
+            </div>
+            <div class="stat">
+                <div class="static">
+                    Amount of Non-Power
+                </div>
+                <div class="dynamic color" style="background-color:cyan;">
+                    <input id="nonPowerAmount" value="50" type="number">
+                </div>
             </div>
         </div>
     </div>
-    <div class="info">
-        <div class="stat">
-            <div class="static">
-                Sigils Removed
-            </div>
-            <div id="vow1" class="dynamic">
-                0
-            </div>
-        </div>
-        <div class="stat">
-            <div class="static">
-                Damage Taken
-            </div>
-            <div id="vow2" class="dynamic">
-                0
-            </div>
-        </div>
-        <div class="stat">
-            <div class="static">
-                Cards Drawn
-            </div>
-            <div id="drawn" class="dynamic">
-                0
-            </div>
-        </div>
-        <div class="stat">
-            <div class="static">
-                Non-Power Drawn (Vows)
-            </div>
-            <div id="npd1" class="dynamic">
-                0
-            </div>
-        </div>
-        <div class="stat">
-            <div class="static">
-                Non-Power Drawn (No Vows)
-            </div>
-            <div id="npd2" class="dynamic">
-                0
-            </div>
-        </div>
-        <div class="clicky" onclick="PlayVow()">
-            Play a Vow
-        </div>
-        <div class="clicky" onclick="DrawOne()">
-            Draw a Card
-        </div>
-        <div class="clicky" onclick="DrawUntilDiff()">
-            Draw Until Difference
-        </div>
-        <div class="clicky" onclick="CreateDeck()">
-            Generate New Deck
-        </div>
-        <div class="stat">
-            <div class="static">
-                Non-Sigil Power Card
-            </div>
-            <div class="dynamic color" style="background-color:yellowgreen;">
-                <input id="vowAmount" value="12" type="number">
-            </div>
-        </div>
-        <div class="stat">
-            <div class="static">
-                Sigil
-            </div>
-            <div class="dynamic color" style="background-color:orangered;">
-                <input id="sigilAmount" value="13" type="number">
-            </div>
-        </div>
-        <div class="stat">
-            <div class="static">
-                Non-Power Card
-            </div>
-            <div class="dynamic color" style="background-color:cyan;">
-                <input id="nonPowerAmount" value="50" type="number">
-            </div>
-        </div>
-    </div>
-
-</body>
-
-</html>
+</body></html>
